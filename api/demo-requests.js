@@ -11,20 +11,48 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;')
 }
 
-function buildConfirmationEmail({ full_name, company }) {
+function isHttpsUrl(u) {
+  return /^https:\/\//i.test(String(u ?? '').trim())
+}
+
+/** Public absolute URL for <img> in HTML email (many clients block SVG; use EMAIL_LOGO_URL PNG if needed). */
+function resolveLogoUrl() {
+  const explicit = process.env.EMAIL_LOGO_URL?.trim()
+  if (explicit && isHttpsUrl(explicit)) return explicit
+
+  const rawBase =
+    process.env.PUBLIC_SITE_URL?.trim() ||
+    process.env.SITE_URL?.trim() ||
+    (process.env.VERCEL_URL
+      ? `https://${String(process.env.VERCEL_URL).replace(/^https?:\/\//, '')}`
+      : '')
+
+  const base = rawBase.replace(/\/$/, '')
+  if (!base || !isHttpsUrl(base)) return null
+  return `${base}/brand/auzaar-logo.svg`
+}
+
+function buildConfirmationEmail({ full_name, company, logoUrl }) {
   const name = escapeHtml(full_name)
   const co = company ? escapeHtml(company) : ''
-  const subject = 'We received your Auzaar demo request'
+  const logoBlock =
+    logoUrl && isHttpsUrl(logoUrl)
+      ? `<div style="margin:24px 0 0">
+  <img src="${escapeHtml(logoUrl)}" width="200" height="40" alt="Auzaar Networks" style="display:block;max-width:240px;height:auto;border:0;outline:none;text-decoration:none" />
+</div>`
+      : ''
+  const subject = 'Thank You for Your Interest in Auzaar Networks'
   const html = `<!DOCTYPE html>
 <html>
 <body style="font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:#0f172a;max-width:560px">
   <p>Hi ${name},</p>
-  <p>Thanks for requesting a demo with Auzaar Networks. We have received your submission${
+  <p>Thanks for requesting a demo with Auzaar Networks. We have received your request${
     co ? ` for <strong>${co}</strong>` : ''
   }.</p>
-  <p>A member of our team will reach out within one business day to schedule your walkthrough.</p>
+  <p>A member of our team will reach out soon with more information.</p>
   <p>If you did not submit this request, you can ignore this email.</p>
   <p style="margin-top:2rem;color:#64748b;font-size:13px">Auzaar Networks</p>
+  ${logoBlock}
 </body>
 </html>`
   const text = [
@@ -36,7 +64,7 @@ function buildConfirmationEmail({ full_name, company }) {
     '',
     'If you did not submit this request, you can ignore this email.',
     '',
-    '— Auzaar Networks',
+    '— Aryan Arun, CEO',
   ].join('\n')
   return { subject, html, text }
 }
@@ -130,7 +158,11 @@ export default async function handler(req, res) {
   }
 
   const resend = new Resend(resendKey)
-  const { subject, html, text } = buildConfirmationEmail({ full_name, company })
+  const { subject, html, text } = buildConfirmationEmail({
+    full_name,
+    company,
+    logoUrl: resolveLogoUrl(),
+  })
 
   const replyTo = process.env.RESEND_REPLY_TO
 

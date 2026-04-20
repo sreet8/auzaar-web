@@ -42,9 +42,13 @@ Optional:
 | `RESEND_REPLY_TO` | Inbox for replies from the lead |
 | `SUPABASE_SERVICE_ROLE_KEY` | Prefer over anon for inserts; then revoke anon INSERT (see migration `20260420120000_*`) |
 | `SUPABASE_URL` | Optional duplicate of project URL if you do not want to rely on `VITE_SUPABASE_URL` in server-only contexts |
+| `PUBLIC_SITE_URL` or `SITE_URL` | **HTTPS** site origin (e.g. `https://www.auzaar.com`) so confirmation emails can embed the same logo as the site via `…/brand/auzaar-logo.svg` |
+| `EMAIL_LOGO_URL` | Optional full **HTTPS** URL to a **PNG** (recommended for Outlook); overrides the derived `/brand/auzaar-logo.svg` URL |
 
-Build: **Vite**, output directory **`dist`**.
+On Vercel, **`VERCEL_URL`** is set automatically; the API uses `https://<VERCEL_URL>/brand/auzaar-logo.svg` for the email logo when `PUBLIC_SITE_URL` is not set (preview deployments work out of the box). Use **`PUBLIC_SITE_URL`** on production with your custom domain so the logo URL matches what you ship.
 
 **Brand:** Replace `public/brand/auzaar-logo.svg` with your official lockup (or change `LOGO_SRC` in `src/components/site/WordMark.jsx`).
+
+Build: **Vite**, output directory **`dist`**.
 
 `vercel.json` rewrites non-`/api/*` paths to `index.html` for client-side routing.

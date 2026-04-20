@@ -1,0 +1,58 @@
+{
+  "name": "DemoRequest",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "work_email": {
+      "type": "string",
+      "format": "email"
+    },
+    "company": {
+      "type": "string"
+    },
+    "job_title": {
+      "type": "string"
+    },
+    "company_size": {
+      "type": "string",
+      "enum": [
+        "1-50",
+        "51-200",
+        "201-1000",
+        "1001-5000",
+        "5000+"
+      ]
+    },
+    "exploring": {
+      "type": "string",
+      "enum": [
+        "procurement_governance",
+        "ai_agent_oversight",
+        "finance_controls",
+        "vendor_risk",
+        "policy_enforcement",
+        "other"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "closed"
+      ],
+      "default": "new"
+    }
+  },
+  "required": [
+    "full_name",
+    "work_email",
+    "company"
+  ]
+}

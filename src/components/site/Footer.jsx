@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 py-16 lg:py-20">
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
           <div className="col-span-2 lg:col-span-4">
-            <WordMark />
+            <WordMark size="md" />
             <p className="mt-5 text-sm text-muted-foreground max-w-xs leading-relaxed">
               The trust and control layer for agentic commerce. Built for the enterprise era of autonomous transactions.
             </p>

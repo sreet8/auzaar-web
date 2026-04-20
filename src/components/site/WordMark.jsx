@@ -1,19 +1,31 @@
 import React from "react";
 
-export default function WordMark({ className = "" }) {
+/** @typedef {'sm' | 'md'} WordMarkSize */
+
+const sizeClasses = {
+  sm: "h-7 min-h-[28px]",
+  md: "h-8 min-h-[32px]",
+};
+
+/**
+ * Brand lockup from `/public/brand/auzaar-logo.svg`.
+ * Replace that file (or use a PNG and change `LOGO_SRC`) with your official artwork.
+ */
+const LOGO_SRC = "/brand/auzaar-logo.png";
+
+/**
+ * @param {{ className?: string; size?: WordMarkSize; priority?: boolean }} [props]
+ */
+export default function WordMark({ className = "", size = "sm", priority = false }) {
   return (
-    <div className={`flex items-center gap-2.5 ${className}`}>
-      <div className="relative h-7 w-7 flex items-center justify-center">
-        <div className="absolute inset-0 rounded-[6px] bg-gradient-to-br from-primary to-primary/40 opacity-90" />
-        <div className="absolute inset-[2px] rounded-[4px] bg-obsidian flex items-center justify-center">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-          <div className="absolute inset-0 rounded-[4px] border border-primary/40" />
-        </div>
-      </div>
-      <div className="flex flex-col leading-none">
-        <span className="font-display font-bold text-[15px] tracking-tight text-white">Auzaar</span>
-        <span className="mono-label text-[9px] text-muted-foreground mt-0.5">NETWORKS</span>
-      </div>
-    </div>
+    <img
+      src={LOGO_SRC}
+      alt="Auzaar Networks"
+      width={200}
+      height={32}
+      decoding="async"
+      fetchPriority={priority ? "high" : undefined}
+      className={`${sizeClasses[size]} w-auto object-contain object-left ${className}`}
+    />
   );
 }

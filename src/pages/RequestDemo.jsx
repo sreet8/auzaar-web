@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SectionLabel from "../components/site/SectionLabel";
-import { base44 } from "@/api/base44Client";
+import { createDemoRequest } from "@/api/demoRequests";
 import { Check, ArrowRight, Shield, Users, Lock, Activity } from "lucide-react";
 
 const seeItems = [
@@ -36,9 +36,13 @@ export default function RequestDemo() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    await base44.entities.DemoRequest.create(form);
-    setSubmitted(true);
+    const { error: submitError } = await createDemoRequest(form);
     setLoading(false);
+    if (submitError) {
+      setError(submitError.message || "Something went wrong. Please try again.");
+      return;
+    }
+    setSubmitted(true);
   };
 
   return (

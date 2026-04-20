@@ -36,7 +36,7 @@ export default function Navbar() {
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
         <div className="h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <WordMark />
+            <WordMark priority />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">

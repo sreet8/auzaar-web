@@ -1,23 +1,9 @@
 import { useLocation, Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
 import { ArrowUpRight, Home as HomeIcon } from 'lucide-react';
 
 export default function PageNotFound() {
     const location = useLocation();
     const pageName = location.pathname.substring(1);
-
-    const { data: authData, isFetched } = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => {
-            try {
-                const user = await base44.auth.me();
-                return { user, isAuthenticated: true };
-            } catch {
-                return { user: null, isAuthenticated: false };
-            }
-        }
-    });
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6 bg-obsidian relative overflow-hidden">
@@ -34,11 +20,11 @@ export default function PageNotFound() {
                     The page <span className="text-white font-mono text-sm">/{pageName}</span> does not exist in this application.
                 </p>
 
-                {isFetched && authData?.isAuthenticated && authData.user?.role === 'admin' && (
+                {import.meta.env.DEV && (
                     <div className="mt-8 p-4 rounded-lg border border-ember/30 bg-ember/5 text-left">
-                        <div className="mono-label text-ember">ADMIN NOTE</div>
+                        <div className="mono-label text-ember">DEV NOTE</div>
                         <p className="mt-2 text-sm text-foreground/85">
-                            This page hasn't been implemented yet. Ask the AI to build it.
+                            This route is not defined in <span className="font-mono text-xs">App.jsx</span>.
                         </p>
                     </div>
                 )}
